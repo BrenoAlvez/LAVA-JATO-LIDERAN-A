@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>🚗 Agendamento Lava-Jato Liderança</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Liderança Agend.">
+    
+    <meta name="theme-color" content="#1a75ff"> 
+    
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo_lideranca.png') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{{ url_for('static', filename='images/logo_lideranca.png') }}" 
+                 alt="Logo do Lava Jato Liderança" 
+                 style="max-width: 150px; height: auto; margin-bottom: 10px;">
+            
+            <h1 style="color: var(--primary-color); border-bottom: none; padding-bottom: 0;">
+                LAVA JATO LIDERANÇA
+            </h1>
+            <p style="font-size: 0.9em; color: #6c757d; margin-top: -10px;">
+                🧼 **Qualidade e Confiança:** Agende seu serviço com garantia de excelência!
+            </p>
+        </header>
+        
+        <div id="boas_vindas" class="mensagem-confianca">
+            👋 <strong>Seja bem-vindo(a) ao Lava-Jato Liderança!</strong> É um prazer recebê-lo. Estamos à sua disposição para cuidar do seu veículo com o máximo de atenção e qualidade.
+        </div>
+        
+        <div id="painel_preco" style="
+            display: none; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            border: 2px solid var(--primary-color); 
+            border-radius: 6px; 
+            background-color: #e9f0ff; 
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--primary-color);">
+            VALOR ESTIMADO: <span id="valor_exibido"></span>
+        </div>
+
+        <h2 class="form-title">
+            Novo Agendamento
+        </h2>
+
+        <form method="POST" action="{{ url_for('index') }}">
+            <div>
+                <label for="cliente">Nome do Cliente:</label>
+                <input type="text" id="cliente" name="cliente" required onkeyup="atualizarBoasVindas()">
+            </div>
+            <div>
+                <label for="placa">Placa do Veículo:</label>
+                <input type="text" id="placa" name="placa" required>
+            </div>
+
+            <div>
+                <label for="tipo_veiculo">Tipo de Veículo:</label>
+                <select id="tipo_veiculo" name="tipo_veiculo" required onchange="atualizarServicos()">
+                    <option value="" disabled selected>Selecione</option>
+                    <option value="Carro">Carro</option>
+                    <option value="Moto">Moto</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="servico">Serviço Desejado:</label>
+                <select id="servico" name="servico" required>
+                    <option value="" disabled selected>Escolha o tipo de veículo primeiro</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="data_hora_input">Data e Hora:</label>
+                <input type="datetime-local" id="data_hora_input" name="data_hora_input" required>
+            </div>
+            
+            <button type="submit">🔒 Agendar e Confirmar via WhatsApp</button>
+        </form>
+
+        <h2>📅 Próximos Agendamentos</h2>
+        {% if agendamentos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Data/Hora</th>
+                    <th>Cliente</th>
+                    <th>Placa</th>
+                    <th>Serviço</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for agendamento in agendamentos %}
+                <tr>
+                    <td>{{ agendamento.data_hora_str }}</td>
+                    <td>{{ agendamento.cliente }}</td>
+                    <td>{{ agendamento.placa }}</td>
+                    <td>{{ agendamento.servico }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Não há agendamentos cadastrados.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Definição das opções de serviço por tipo de veículo
+        const servicosPorVeiculo = {
+            Carro: [
+                { valor: "Simples", texto: "Lavagem Simples" }, 
+                { valor: "Completa", texto: "Lavagem Completa" }, 
+                { valor: "Completa Sem Cera", texto: "Lavagem Completa (Sem Cera)" }, 
+                { valor: "Completa + Motor", texto: "Lavagem Completa + Motor" }, 
+                { valor: "Motor", texto: "Lavagem Apenas do Motor" } 
+            ],
+            Moto: [
+                { valor: "Completa Moto", texto: "Lavagem Completa Moto" } 
+            ]
+        };
+
+        // Tabela de Preços
+        const tabelaPrecos = {
+            "Simples": 50.00,
+            "Completa": 80.00,
+            "Completa Sem Cera": 70.00,
+            "Completa + Motor": 120.00,
+            "Motor": 50.00,
+            "Completa Moto": 30.00
+        };
+
+        // Função de Boas-Vindas Atualizada
+        function atualizarBoasVindas() {
+            const clienteInput = document.getElementById('cliente');
+            const boasVindasDiv = document.getElementById('boas_vindas');
+            const nome = clienteInput.value.trim();
+            
+            const textoBase = `É um prazer recebê-lo. Estamos à sua disposição para cuidar do seu veículo com o máximo de atenção e qualidade.`;
+            
+            if (nome.length > 0) {
+                const nomeFormatado = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+                // Adiciona o negrito ao nome personalizado
+                boasVindasDiv.innerHTML = `👋 <strong>Olá, ${nomeFormatado}!</strong> ${textoBase}`;
+                
+            } else {
+                // Mensagem padrão em negrito
+                boasVindasDiv.innerHTML = `👋 <strong>Seja bem-vindo(a) ao Lava-Jato Liderança!</strong> ${textoBase}`;
+            }
+        }
+        
+        function atualizarServicos() {
+            const tipoVeiculoSelect = document.getElementById('tipo_veiculo');
+            const servicoSelect = document.getElementById('servico');
+            const tipoSelecionado = tipoVeiculoSelect.value;
+
+            servicoSelect.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>';
+            esconderPreco(); 
+
+            if (tipoSelecionado && servicosPorVeiculo[tipoSelecionado]) {
+                const opcoes = servicosPorVeiculo[tipoSelecionado];
+                
+                opcoes.forEach(servico => {
+                    const novaOpcao = document.createElement('option');
+                    novaOpcao.value = servico.valor;
+                    novaOpcao.textContent = servico.texto;
+                    servicoSelect.appendChild(novaOpcao);
+                });
+            }
+        }
+        
+        function exibirPreco() {
+            const servicoSelect = document.getElementById('servico');
+            const painel = document.getElementById('painel_preco');
+            const valorExibido = document.getElementById('valor_exibido');
+            const servicoSelecionado = servicoSelect.value;
+            
+            if (servicoSelecionado && tabelaPrecos[servicoSelecionado]) {
+                const preco = tabelaPrecos[servicoSelecionado];
+                valorExibido.textContent = 'R$ ' + preco.toFixed(2).replace('.', ',');
+                painel.style.display = 'block';
+            } else {
+                esconderPreco();
+            }
+        }
+
+        function esconderPreco() {
+            document.getElementById('painel_preco').style.display = 'none';
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            atualizarServicos();
+            atualizarBoasVindas(); 
+            
+            document.getElementById('servico').addEventListener('change', exibirPreco); 
+            
+            document.getElementById('tipo_veiculo').addEventListener('change', () => {
+                atualizarServicos();
+                esconderPreco(); 
+            });
+        });
+    </script>
+</body>
+</html>

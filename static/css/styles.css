@@ -1,0 +1,192 @@
+:root {
+    /* Cores Principais */
+    --primary-color: #1a75ff; /* Azul Mais Vivo para Liderança */
+    --secondary-color: #0056b3; /* Azul Escuro */
+    --success-color: #28a745; /* Verde para Agendar */
+    --danger-color: #dc3545; 
+    
+    /* Cores de Fundo e Texto */
+    --bg-color: #f0f4f8; /* Fundo mais suave */
+    --card-bg: #ffffff;
+    --text-color: #343a40;
+    --table-header-bg: var(--primary-color);
+    --table-row-even-bg: #e9f0ff; /* Fundo para linhas pares (Azul Claro) */
+}
+
+/* Base e Tipografia */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    margin: 0; 
+    padding: 20px;
+    background-color: var(--bg-color); 
+    color: var(--text-color);
+}
+.container { 
+    max-width: 900px; 
+    margin: 30px auto; 
+    background: var(--card-bg); 
+    padding: 30px; 
+    border-radius: 12px; 
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); 
+}
+
+/* Cabeçalho e Títulos */
+header {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--secondary-color); 
+}
+
+header img {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+h1 { 
+    color: var(--primary-color); 
+    font-size: 2.0em; 
+    font-weight: 800;
+    text-transform: uppercase;
+}
+h2 {
+    color: var(--secondary-color);
+    margin-top: 30px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    font-size: 1.6em;
+    font-weight: 700;
+}
+
+/* ESTILO FINAL: Destaque para Mensagem de Boas-Vindas */
+.mensagem-confianca {
+    text-align: center; 
+    margin-bottom: 25px; 
+    padding: 15px;
+    
+    /* ÊNFASE */
+    font-size: 1.25em; 
+    font-weight: 500;
+    line-height: 1.4;
+    
+    /* COR FINAL: Cor do texto principal é preto escuro */
+    color: #333; 
+    border: 1px solid #d0d7e3; 
+    border-radius: 8px;
+    background-color: #f8fcfd; 
+}
+
+/* Garante que as palavras em negrito fiquem em azul */
+.mensagem-confianca strong {
+    font-weight: 700;
+    color: var(--primary-color); 
+}
+
+/* Formulário e Inputs */
+form { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px; 
+    padding: 25px; 
+    border: 1px solid #ced4da; 
+    border-radius: 8px;
+    background-color: var(--card-bg); 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+label { 
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+input[type="text"], input[type="datetime-local"], select { 
+    width: 95%; 
+    padding: 10px; 
+    border: 2px solid #ced4da; 
+    border-radius: 6px; 
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(26, 117, 255, 0.25);
+    outline: none;
+}
+button { 
+    grid-column: 1 / 3; 
+    padding: 15px; 
+    background-color: var(--success-color); 
+    color: white; 
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.1s;
+}
+button:hover { 
+    background-color: #1e7e34; 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Painel de Preço */
+#painel_preco {
+    border: 2px solid var(--primary-color) !important; 
+    background-color: #e9f0ff !important; 
+    color: var(--secondary-color) !important;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+#valor_exibido {
+     font-weight: 800;
+     margin-left: 10px;
+     color: var(--secondary-color); 
+}
+
+/* Tabela de Agendamentos */
+table { 
+    width: 100%; 
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px; 
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+th, td { 
+    border-bottom: 1px solid #cce0ff; 
+    padding: 12px; 
+    text-align: left; 
+}
+th { 
+    background-color: var(--table-header-bg); 
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+tr:nth-child(even) {
+    background-color: var(--table-row-even-bg); 
+}
+tr:hover {
+    background-color: #cce0ff; 
+    transition: background-color 0.3s;
+}
+
+/* Responsividade Básica */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        padding: 20px;
+    }
+    form {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+    }
+    button {
+        grid-column: 1 / 2;
+    }
+    input[type="text"], input[type="datetime-local"], select {
+        width: 100%; 
+    }
+}
